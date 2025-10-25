@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinic Dashboard</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f5f4f2;
+  color: #222;
+}
+
+/* Wrapper */
+.wrap {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: linear-gradient(180deg, #8a2b2b, #611c1c);
+  color: #fff;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sidebar .avatar {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar .avatar-img {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  font-size: 26px;
+}
+
+.sidebar .user-name {
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+}
+
+.sidebar nav {
+  margin-top: 15px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 5px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.sidebar nav a i {
+  width: 18px;
+  text-align: center;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(3px);
+}
+
+/* Main */
+main {
+  flex: 1;
+  background: #f5f5f5;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background: #fff;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  margin: 0 auto;
+  font-size: 20px;
+  font-weight: 700;
+  color: #6e2222;
+  text-align: center;
+  flex: 1;
+}
+
+header .date {
+  position: absolute;
+  right: 30px;
+}
+
+.date input {
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+}
+
+/* Cards */
+.cards {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 25px 30px 20px;
+}
+
+.card {
+  flex: 1;
+  min-width: 200px;
+  background: #fff;
+  padding: 18px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+}
+
+.card .count {
+  font-size: 28px;
+  font-weight: 700;
+  color: #8a2b2b;
+}
+
+/* Recent Patients */
+.recent {
+  background: #fff;
+  margin: 0 30px 30px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.recent h2 {
+  margin-top: 0;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #6e2222;
+  border-left: 4px solid #8a2b2b;
+  padding-left: 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 10px 8px;
+  text-align: left;
+  border-bottom: 1px solid #e0dfdf;
+  font-size: 13px;
+}
+
+.table th {
+  background: #f7f4f3;
+  color: #555;
+  font-weight: 600;
+}
+
+.table tr:hover {
+  background: #faf9f8;
+}
+
+.view-btn {
+  padding: 6px 12px;
+  background: #8a2b2b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.25s ease;
+}
+
+.view-btn:hover {
+  background: #6e2222;
+  transform: scale(1.05);
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(3px);
+}
+
+.modal.open {
+  display: flex;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-content {
+  background: #fff;
+  padding: 22px;
+  border-radius: 10px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: #6e2222;
+  border-bottom: 2px solid #8a2b2b;
+  padding-bottom: 6px;
+}
+
+.modal-content p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.close-btn {
+  background: #ccc;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.close-btn:hover {
+  background: #8a2b2b;
+  color: #fff;
+}
+
+.logout-btn {
+    margin-left: 30px;
+    margin-top: 320px;
+    color: #ffffff;
+    background-color: #8b2a2a;
+    height: 40px;
+    width: 120px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #6b1c1c; 
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="sidebar">
+     <div class="avatar">
+          <div class="avatar-img"><i class="fa-regular fa-user"></i></div>
+        </div>
+            <div class="user-name">Angelo Amican</div>
+    <nav>
+      <a href="dashboardfordoctor.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+      <a href="createpatient.html"><i class="fa-solid fa-user-plus"></i> Create Patient</a>
+      <a href="patientlist.html"><i class="fa-solid fa-list"></i> Patient List</a>
+      <a href="inventori.html"><i class="fa-solid fa-calendar"></i> Inventory</a>
+    </nav>
+       <div class="logout-wrap">
+              <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+  </aside>
+
+  <main>
+    <header>
+      <h1>Dashboard</h1>
+      <div class="date">Date: <input type="date" id="todayDate"/></div>
+    </header>
+
+    <div class="cards">
+      <div class="card">
+        <h2>Total Patients</h2>
+        <div class="count" id="totalPatients">0</div>
+      </div>
+      <div class="card">
+        <h2>Today's Patients</h2>
+        <div class="count" id="todayPatients">0</div>
+      </div>
+    </div>
+
+    <div class="recent">
+      <h2>Recent Patients</h2>
+      <table class="table" id="recentTable">
+        <thead>
+          <tr><th>Name</th><th>ID</th><th>Year/Section</th><th>Action</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="patientModal">
+  <div class="modal-content">
+    <h3>Patient Information</h3>
+    <div id="patientDetails"></div>
+    <div style="text-align:right;margin-top:15px">
+      <button class="close-btn" id="closeModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const totalEl = document.getElementById('totalPatients');
+const todayEl = document.getElementById('todayPatients');
+const recentTable = document.querySelector('#recentTable tbody');
+const modal = document.getElementById('patientModal');
+const patientDetails = document.getElementById('patientDetails');
+const closeModal = document.getElementById('closeModal');
+
+document.getElementById('todayDate').valueAsDate = new Date();
+
+function getPatients(){
+  return JSON.parse(localStorage.getItem('patients') || '[]');
+}
+
+function renderDashboard() {
+  const patients = getPatients();
+  totalEl.textContent = patients.length;
+
+  const today = new Date().toISOString().split('T')[0];
+  const todayPatients = patients.filter(p => {
+    if (!p.createdAt) return false;
+    return p.createdAt.split('T')[0] === today;
+  });
+  todayEl.textContent = todayPatients.length;
+
+  recentTable.innerHTML = '';
+
+  const recent = patients.length > 0 ? [patients[patients.length - 1]] : [];
+
+  if (recent.length === 0) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="4" style="text-align:center;color:#666">No patients yet</td>`;
+    recentTable.appendChild(tr);
+  } else {
+    recent.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${p.idno || '-'}</td>
+        <td>${p.name || '-'}</td>
+        <td>${p.section || '-'}</td>
+        <td><button class="view-btn">View</button></td>
+      `;
+      tr.querySelector('.view-btn').addEventListener('click', () => {
+        const index = patients.indexOf(p);
+        localStorage.setItem('viewIndex', index);
+        window.location.href = 'view.html';
+      });
+      recentTable.appendChild(tr);
+    });
+  }
+}
+
+  document.querySelector(".logout-btn").addEventListener("click", () => {
+  localStorage.removeItem("loggedInUser");
+  sessionStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+});
+
+closeModal.addEventListener('click',()=>modal.classList.remove('open'));
+window.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open');});
+
+// Initialize
+renderDashboard();
+
+</script>
+</body>
+</html>

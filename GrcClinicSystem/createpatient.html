@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Patient</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f5f4f2;
+  color: #222;
+}
+
+.wrap {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: linear-gradient(180deg, #8a2b2b, #611c1c);
+  color: #fff;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sidebar .avatar {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar .avatar-img {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  font-size: 26px;
+}
+
+.sidebar .user-name {
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+}
+
+.sidebar nav {
+  margin-top: 15px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 5px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.sidebar nav a i {
+  width: 18px;
+  text-align: center;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(3px);
+}
+
+.logout-wrap {
+  margin-top: auto;
+  text-align: center;
+}
+
+#logoutBtn {
+  padding: 7px 14px;
+  background: #fff;
+  color: #8a2b2b;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Main content */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+/* Header (same look as dashboard) */
+header {
+  background: #fff;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  margin: 0 auto;
+  font-size: 20px;
+  font-weight: 700;
+  color: #6e2222;
+  text-align: center;
+  flex: 1;
+}
+
+header .date {
+  position: absolute;
+  right: 30px;
+  font-size: 14px;
+  color: #444;
+}
+
+.date input {
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+}
+
+/* Container */
+.container {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.title h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #6e2222;
+  border-left: 4px solid #8a2b2b;
+  padding-left: 10px;
+}
+
+.title .date {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+label {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+textarea {
+  resize: none;
+  min-height: 40px;
+}
+
+.section-title {
+  font-weight: 700;
+  margin: 25px 0 10px;
+  font-size: 15px;
+  color: #6e2222;
+  border-left: 4px solid #8a2b2b;
+  padding-left: 10px;
+}
+
+/* Table (Review of Systems) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th,
+td {
+  border-bottom: 1px solid #e0dfdf;
+  padding: 8px;
+  text-align: center;
+  font-size: 13px;
+}
+
+th {
+  background: #f7f4f3;
+  font-weight: 600;
+  color: #555;
+}
+
+tr:hover {
+  background: #faf9f8;
+}
+
+/* Buttons */
+.actions {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 14px;
+}
+
+.btn.save {
+  background: #8a2b2b;
+  color: #fff;
+}
+
+.btn.save:hover {
+  background: #6e2222;
+  transform: scale(1.03);
+}
+
+.btn.reset {
+  background: #ccc;
+  color: #222;
+}
+
+.btn.reset:hover {
+  background: #b5b5b5;
+}
+
+.logout-btn {
+    margin-bottom: 20px;
+    color: #ffffff;
+    background-color: #8b2a2a;
+    height: 40px;
+    width: 120px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #6b1c1c; 
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="sidebar">
+     <div class="avatar">
+          <div class="avatar-img"><i class="fa-regular fa-user"></i></div>
+        </div>
+            <div class="user-name">Angelo Amican</div>
+    <nav>
+      <a href="dashboardfordoctor.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+      <a href="createpatient.html"><i class="fa-solid fa-user-plus"></i> Create Patient</a>
+      <a href="patientlist.html"><i class="fa-solid fa-list"></i> Patient List</a>
+      <a href="inventori.html"><i class="fa-solid fa-calendar"></i> Inventory</a>
+    </nav>
+      <div class="logout-wrap">
+              <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+  </aside>
+
+<main>
+<header>
+<h1>Create Patient</h1>
+<div class="date">Date: <input type="date" value="2025-10-22"/></div>
+</header>
+
+<div class="container">
+<div class="title">
+<h2>Patient Information Form</h2>
+</div>
+
+<div class="form-group">
+<div class="form-row">
+<div style="flex:2">
+<label>Name</label>
+<input type="text" id="name" placeholder="Surname, First name"/>
+</div>
+<div style="flex:1">
+<label>Year/Section</label>
+<input type="text" id="section" placeholder="e.g 2nd Year, BSIT-02"/>
+</div>
+<div style="flex:1">
+<label>ID No.</label>
+<input type="text" id="idno" placeholder="ID Number"/>
+</div>
+</div>
+</div>
+
+<div class="form-row">
+<div style="flex:1">
+<label>Gender</label>
+<select id="gender"><option>Male</option><option>Female</option></select>
+</div>
+<div style="flex:1">
+<label>Age</label>
+<input type="number" id="age" min="1"/>
+</div>
+<div style="flex:1">
+<label>Civil Status</label>
+<select id="status"><option>Single</option><option>Married</option><option>Widowed</option></select>
+</div>
+<div style="flex:1">
+<label>Date of Birth</label>
+<input type="date" id="dob"/>
+</div>
+</div>
+
+<div class="form-group">
+<label>Address</label>
+<input type="text" id="address" placeholder="Street, barangay, city"/>
+<label>PARENT/GUARDIAN</label>
+<input type="text" id="parents" placeholder="Lname, Fname, MI."/>
+</div>
+
+<div class="form-row">
+<div style="flex:1">
+<label>Past Medical History</label>
+<textarea id="past" placeholder="Past medical issues..."></textarea>
+</div>
+<div style="flex:1">
+<label>Present Illness</label>
+<textarea id="present" placeholder="Current complaints..."></textarea>
+</div>
+</div>
+
+<div class="form-group">
+<label>Family History</label>
+<textarea id="family" placeholder="Family health history..."></textarea>
+</div>
+
+<div class="section-title">Review of Systems</div>
+<table id="review-table">
+<tr>
+<th>System</th><th>+</th><th>-</th><th>System</th><th>+</th><th>-</th>
+</tr>
+<tr><td>General</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td>Genitourinary</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+<tr><td>Eyes</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td>Musculoskeletal</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+<tr><td>Ears</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td>Integumentary</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+<tr><td>Nose</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td>Endocrine</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+<tr><td>Cardiovascular</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td>Nervous</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+<tr><td>Respiratory</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td>Hematologic</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+<tr><td>Gastrointestinal</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td>Lymphatic</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+</table>
+
+<div class="section-title">Physical Examination</div>
+<div class="form-row">
+<div><label>Height (m)</label><input type="text" id="height"></div>
+<div><label>Weight (kg)</label><input type="text" id="weight"></div>
+<div><label>Blood Pressure</label><input type="text" id="bp" placeholder="120/80 mmHg"></div>
+<div><label>Pulse</label><input type="text" id="pulse"></div>
+<div><label>R.R</label><input type="text" id="rr"></div>
+<div><label>Medicine Given</label><input type="text" id="medicine"></div>
+</div>
+
+<div class="form-row">
+<div style="flex:1">
+<label>Recommendation</label>
+<textarea id="recommendation"></textarea>
+</div>
+<div style="flex:1">
+<label>Assessment</label>
+<textarea id="assessment"></textarea>
+</div>
+</div>
+
+<div class="actions">
+<button class="btn reset" type="reset">Reset</button>
+<button class="btn save">Save Patient</button>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+// --- Assign value="yes" and value="no" to all review checkboxes ---
+document.querySelectorAll('#review-table tr').forEach(row => {
+  const checks = row.querySelectorAll('input[type="checkbox"]');
+  checks.forEach((check, i) => {
+    check.value = i % 2 === 0 ? 'yes' : 'no';
+  });
+});
+// --- Prevent double check in same row ---
+document.querySelectorAll("#review-table tr").forEach(row => {
+  const checks = row.querySelectorAll("input[type='checkbox']");
+  if (checks.length === 2) return; // skip header
+  for (let i = 0; i < checks.length; i += 2) {
+    const a = checks[i], b = checks[i + 1];
+    a.addEventListener("change", () => { if (a.checked) b.checked = false; });
+    b.addEventListener("change", () => { if (b.checked) a.checked = false; });
+  }
+});
+
+// --- LOAD DATA IF EDIT MODE ---
+const editIndex = localStorage.getItem('editIndex');
+if (editIndex !== null) {
+  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+  const p = patients[editIndex];
+  if (p) {
+    document.getElementById('name').value = p.name || '';
+    document.getElementById('section').value = p.section || '';
+    document.getElementById('idno').value = p.idno || '';
+    document.getElementById('gender').value = p.gender || '';
+    document.getElementById('age').value = p.age || '';
+    document.getElementById('status').value = p.status || '';
+    document.getElementById('dob').value = p.dob || '';
+    document.getElementById('address').value = p.address || '';
+    document.getElementById('parents').value = p.parents || '';
+    document.getElementById('past').value = p.past || '';
+    document.getElementById('present').value = p.present || '';
+    document.getElementById('family').value = p.family || '';
+    document.getElementById('height').value = p.height || '';
+    document.getElementById('weight').value = p.weight || '';
+    document.getElementById('bp').value = p.bp || '';
+    document.getElementById('pulse').value = p.pulse || '';
+    document.getElementById('rr').value = p.rr || '';
+    document.getElementById('medicine').value = p.medicine || '';
+    document.getElementById('recommendation').value = p.recommendation || '';
+    document.getElementById('assessment').value = p.assessment || '';
+
+    // --- ✅ Load Review Answers ---
+    if (p.review && Array.isArray(p.review)) {
+      const rows = document.querySelectorAll('#review-table tr');
+      p.review.forEach((ans, i) => {
+        if (i + 1 < rows.length) {
+          const yes = rows[i + 1].querySelector('input[value="yes"]');
+          const no = rows[i + 1].querySelector('input[value="no"]');
+          if (ans === 'Yes' || ans === '✔️') yes.checked = true;
+          else if (ans === 'No' || ans === '✖️' || ans === '–') no.checked = true;
+        }
+      });
+    }
+  }
+  localStorage.removeItem('editIndex');
+}
+
+// --- SAVE DATA ---
+const saveBtn = document.querySelector('.btn.save');
+if (saveBtn) {
+  saveBtn.addEventListener('click', () => {
+    const review = [];
+    document.querySelectorAll('#review-table tr').forEach((row, i) => {
+      if (i === 0) return;
+      const yes = row.querySelector('input[value="yes"]');
+      const no = row.querySelector('input[value="no"]');
+      let answer = '';
+      if (yes?.checked) answer = '✔️';
+      else if (no?.checked) answer = '✖️';
+      else answer = '–';
+      review.push(answer);
+    });
+
+    const patient = {
+      name: document.getElementById('name').value,
+      section: document.getElementById('section').value,
+      idno: document.getElementById('idno').value,
+      gender: document.getElementById('gender').value,
+      age: document.getElementById('age').value,
+      status: document.getElementById('status').value,
+      dob: document.getElementById('dob').value,
+      address: document.getElementById('address').value,
+      parents: document.getElementById('parents').value,
+      past: document.getElementById('past').value,
+      present: document.getElementById('present').value,
+      family: document.getElementById('family').value,
+      height: document.getElementById('height').value,
+      weight: document.getElementById('weight').value,
+      bp: document.getElementById('bp').value,
+      pulse: document.getElementById('pulse').value,
+      rr: document.getElementById('rr').value,
+      medicine: document.getElementById('medicine').value,
+      recommendation: document.getElementById('recommendation').value,
+      assessment: document.getElementById('assessment').value,
+      review: review,
+    };
+
+    const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+    const editIndexNow = localStorage.getItem('editIndex');
+
+    if (editIndexNow !== null) {
+      patients[editIndexNow] = patient;
+      localStorage.removeItem('editIndex');
+    } else {
+      patient.createdAt = new Date().toISOString();
+      patients.push(patient);
+    }
+
+    localStorage.setItem('patients', JSON.stringify(patients));
+
+    // --- ✅ Deduct medicine AFTER saving ---
+    const medName = patient.medicine.trim();
+    if (medName) deductMedicineFromInventory(medName);
+
+    alert('Patient information saved successfully!');
+    window.location.href = 'patientlist.html';
+  });
+}
+
+// --- ✅ Deduct medicine from Inventory ---
+function deductMedicineFromInventory(medicineName) {
+  if (!medicineName) return;
+  const STORAGE_KEY = 'med-inventory-v1';
+  let medicines = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+  const med = medicines.find(m =>
+    m.name.toLowerCase().includes(medicineName.toLowerCase().trim())
+  );
+
+  if (!med) {
+    console.warn(`⚠️ Medicine "${medicineName}" not found in inventory.`);
+    return;
+  }
+
+  const oldQty = parseInt(med.quantity) || 0;
+  med.quantity = Math.max(oldQty - 1, 0);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(medicines));
+
+  alert(`💊 ${med.name} dispensed.\nRemaining: ${med.quantity} ${med.unit}`);
+  console.log(`Medicine updated: ${med.name} - ${oldQty} → ${med.quantity}`);
+}
+
+  document.querySelector(".logout-btn").addEventListener("click", () => {
+  localStorage.removeItem("loggedInUser");
+  sessionStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+});
+
+
+</script>
+</body>
+</html>

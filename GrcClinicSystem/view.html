@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Information</title>
+  <style>
+    body {
+  background: #f8f4f2;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn.back {
+  background: #eee;
+}
+
+.btn.print {
+  background: #b33a3a;
+  color: #fff;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 20px;
+  margin-bottom: 15px;
+}
+
+.info-grid .col-span-2 {
+  grid-column: span 2;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10pdx;
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 15px;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  padding: 3px 5px;
+}
+
+.exam-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+@media print {
+  .btn {
+    display: none;
+  }
+  body {
+    background: white;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="btn back" onclick="window.location.href='patientlist.html'">← Back to List</button>
+      <button class="btn print" onclick="window.print()">🖨 Print</button>
+    </div>
+
+    <h2>PATIENT INFORMATION</h2>
+    <div id="patientInfo"></div>
+  </div>
+
+  <script>
+    const patients = JSON.parse(localStorage.getItem('patients')) || [];
+const index = localStorage.getItem('viewIndex');
+const p = patients[index];
+
+if (!p) {
+  document.getElementById('patientInfo').innerHTML = '<p>Patient not found.</p>';
+} else {
+  // Generate review system layout
+  const reviewNames = [
+    'General', 'Eyes', 'Ears', 'Nose', 'Cardiovascular',
+    'Respiratory', 'Gastrointestinal', 'Genitourinary',
+    'Musculoskeletal', 'Integumentary', 'Endocrine', 'Nervous',
+    'Hematologic', 'Lymphatic'
+  ];
+
+  let reviewHTML = '';
+  if (p.review && Array.isArray(p.review)) {
+  reviewNames.forEach((name, i) => {
+    const ans = p.review[i] || '';
+    let symbol = '';
+
+    // Detect kung anong character ang ginamit
+    if (ans === 'Yes' || ans === '+' || ans === '(+)' || ans === '✔') symbol = '(+)';
+    else if (ans === 'No' || ans === '-' || ans === '(-)' || ans === '✖' || ans === 'x') symbol = '(-)';
+    else symbol = ans || '(-)'; // fallback para makita kung may ibang value
+
+    reviewHTML += `
+      <div class="review-item">
+        <span>${name}</span>
+        <span>${symbol}</span>
+      </div>`;
+  });
+}
+
+  document.getElementById('patientInfo').innerHTML = `
+    <div class="info-grid">
+      <div><strong>ID No:</strong> ${p.idno || '-'}</div>
+      <div><strong>Year/Section:</strong> ${p.section || '-'}</div>
+      <div><strong>Name:</strong> ${p.name || '-'}</div>  
+      <div><strong>Gender:</strong> ${p.gender || '-'}</div>
+      <div><strong>Age:</strong> ${p.age || '-'}</div>
+      <div><strong>Civil Status:</strong> ${p.status || '-'}</div>
+      <div><strong>Date of Birth:</strong> ${p.dob || '-'}</div>
+      <div class="col-span-2"><strong>Address:</strong> ${p.address || '-'}</div>
+      <div class="col-span-2"><strong>Parent/Guardian:</strong> ${p.parents || '-'}</div>
+      <div class="col-span-2"><strong>Past Medical History:</strong> ${p.past || '-'}</div>
+      <div class="col-span-2"><strong>Present Illness:</strong> ${p.present || '-'}</div>
+      <div class="col-span-2"><strong>Family History:</strong> ${p.family || '-'}</div>
+    </div>
+
+    <h4>Review System:</h4>
+    <div class="review-grid">${reviewHTML}</div>
+
+    <h4>Physical Examination:</h4>
+    <div class="exam-grid">
+      <div><strong>Height:</strong> ${p.height || '-'}</div>
+      <div><strong>Weight:</strong> ${p.weight || '-'}</div>
+      <div><strong>BP:</strong> ${p.bp || '-'}</div>
+      <div><strong>Pulse:</strong> ${p.pulse || '-'}</div>
+      <div><strong>RR:</strong> ${p.rr || '-'}</div>
+    </div>
+
+    <div class="col-span-2"><strong>Assessment:</strong> ${p.assessment || '-'}</div>
+    <div class="col-span-2"><strong>Recommendation:</strong> ${p.recommendation || '-'}</div>
+  `;
+
+  // Remove view index after loading
+  localStorage.removeItem('viewIndex');
+}
+
+  </script>
+</body>
+</html>
